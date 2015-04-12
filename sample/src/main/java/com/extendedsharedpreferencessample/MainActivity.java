@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.extendedsharedpreferences.ExtendedSharedPreferences;
 import com.extendedsharedpreferences.converter.GsonConverter;
+import com.google.common.base.Objects;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,10 +29,26 @@ public class MainActivity extends ActionBarActivity {
                 .setConverter(new GsonConverter())
                 .build();
 
-        ComplexObject actual = new ComplexObject().fillSelf();
-        sharedPreferences.edit().putObject("test", ComplexObject.class, actual).commit();
+        // Create complex object
+        final ComplexObject actual = new ComplexObject().fillSelf();
+        // Write it to SharedPreferences
+        sharedPreferences
+                .edit()
+                .putObject("test", ComplexObject.class, actual)
+                .commit();
+        // Get it from SharedPreferences
         ComplexObject expected = sharedPreferences.getObject("test", ComplexObject.class, null);
-        Log.d(TAG, "The result of comparison of 'actual' and 'expected' is " + actual.equals(expected));
+        // Check equality
+        Log.d(TAG, "The result of comparison of 'actual' and 'expected' is " + Objects.equal(actual, expected));
+        // Remove preference
+        sharedPreferences
+                .edit()
+                .putObject("test", ComplexObject.class, null)
+                .commit();
+        // Try to get object from SharedPreferences
+        expected = sharedPreferences.getObject("test", ComplexObject.class, null);
+        // Check equality
+        Log.d(TAG, "The result of comparison of 'null' and 'expected' is " + Objects.equal(null, expected));
     }
 
     @Override
