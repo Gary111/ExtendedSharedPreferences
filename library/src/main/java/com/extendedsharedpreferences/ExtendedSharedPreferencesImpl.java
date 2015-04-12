@@ -159,13 +159,13 @@ class ExtendedSharedPreferencesImpl implements ExtendedSharedPreferences {
 
         @Override
         public <T> ExtendedEditor putObject(String key, Type type, T value) {
-            editor.putString(key, converter.toString(value, type));
+            editor.putString(key, (value != null) ? converter.toString(value, type) : null);
             return this;
         }
 
         @Override
         public <T> ExtendedEditor putObject(String key, Class<T> type, T value) {
-            editor.putString(key, converter.toString(value, type));
+            editor.putString(key, (value != null) ? converter.toString(value, type) : null);
             return this;
         }
 
